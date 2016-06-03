@@ -2,11 +2,19 @@ import React from 'react'
 import {connect} from 'react-redux';
 import  * as ActivityActions from '../actions.js';
 import {bindActionCreators} from 'redux';
-import uuid from 'node-uuid'
+
+import StreamItem from './StreamItem'
+
 class ActivityStreamContainer extends React.Component {
+    constructor(props){
+        super(props);
+
+    }
+    componentDidMount(){
+        const activeurl = this.props.next.trim().length > 0 ? this.props.next : 'https://aes.yookos.com/v1/jomski2009/feeds/default'
+        this.props.getActivities(activeurl)
+    }
     render() {
-        console.log('Next url: ', this.props.next)
-        console.log(this.props.next.trim().length)
         const activeurl = this.props.next.trim().length > 0 ? this.props.next : 'https://aes.yookos.com/v1/jomski2009/feeds/default'
         console.log('Active url: ', activeurl)
 
@@ -15,15 +23,11 @@ class ActivityStreamContainer extends React.Component {
                 <ul>
                     {this.props.activities.map((activity) => {
                         return (
-                            <li>
-                                <div>{activity.actor.displayname}</div>
-                                <div><img className="avatar-image" src={activity.actor.avatar}/></div>
-                                <div>{activity.object.type}</div>
-                            </li>
+                            <StreamItem key={activity.object.id} activity={activity}/>
                         )
                     })}
                 </ul>
-                <button onClick= {() => this.props.getActivities(activeurl)}>Load More</button>
+                <button onClick={() => this.props.getActivities(activeurl)}>Load More</button>
             </div>
         )
     }
@@ -36,7 +40,7 @@ function mapStateToProps(state) {
     }
 }
 
-function mapActionCreatorsToProps(dispatch){
+function mapActionCreatorsToProps(dispatch) {
     return bindActionCreators(ActivityActions, dispatch);
 }
 
