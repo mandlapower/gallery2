@@ -14,10 +14,8 @@ export default function images(state=defaultState, action){
             console.log('We will handle activities getting');
             return state;
         case 'ACTIVITIES_FETCHED':
-            console.log('We will process activities gotten')
-            console.log(action.activity_payload);
-            return {...state, activities:state.activities.concat(action.activity_payload.list), next_activity:action.activity_payload.navigation.next}
+            return {...state, activities:[...state.activities, ...action.activity_payload.list], next_activity:action.activity_payload.navigation.next}
         default:
-            return state
+            return state 
     }
 }
